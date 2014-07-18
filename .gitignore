@@ -1,0 +1,334 @@
+<html>
+<head>
+	<title>Persio</title>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.5.1.min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.10/jquery-ui.min.js"></script>
+    <link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.10/themes/ui-lightness/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.1.min.js"></script> 
+    <script src="jquery-ui.min.js"></script>
+</head>
+
+
+<body>
+
+<div id = "sideMenu">
+    <ul>
+        <li><img id="logo" src="logo-07.png" alt="logo"></li>
+        <li id="r"><span><img class="piece" src="vazirRed.png"></span>Red Player<input type="text" id="input" value="name"><button onclick="write();">go</button></li>
+
+        <li><span><img class="piece" src="vazirBlue.png"></span>Blue Player<input type="text" value="name"><button onclick="write();">go</button></li>
+    </ul>
+</div>
+
+<div id="board">
+
+<!--<button onclick="add()">Add</button>-->
+<div class= "teamBlue" id="hostageBlue1"><img id="red" src="vazirBlue.png" alt="vazir"></div>
+<div class= "teamBlue" id="hostageBlue2"><img id="red" src="vazirBlue.png" alt="vazir"></div>
+<div class= "teamRed" id="hostageRed1"><img id="red" src="vazirRed.png" alt="vazir"></div>
+<div class= "teamRed" id="hostageRed2"><img id="red" src="vazirRed.png" alt="vazir"></div>
+<div class= "teamBlue" id="strikerBlue1"><img id="red" src="knightBlue.png" alt="vazir"></div>
+<div class= "teamBlue" id="strikerBlue2"><img id="red" src="knightBlue.png" alt="vazir"></div>
+<div class= "teamBlue" id="strikerBlue3"><img id="red" src="knightBlue.png" alt="vazir"></div>
+<div class= "teamBlue" id="strikerBlue4"><img id="red" src="knightBlue.png" alt="vazir"></div>
+<div class= "teamRed" id="strikerRed1"><img id="red" src="knightRed.png" alt="vazir"></div>
+<div class= "teamRed" id="strikerRed2"><img id="red" src="knightRed.png" alt="vazir"></div>
+<div class= "teamRed" id="strikerRed3"><img id="red" src="knightRed.png" alt="vazir"></div>
+<div class= "teamRed" id="strikerRed4"><img id="red" src="knightRed.png" alt="vazir"></div>
+<div class= "teamBlue" id="gaurdianBlue"><img id="red" src="pawnBlue.png" alt="vazir"></div>
+<div class= "teamRed" id="gaurdianRed"><img id="red" src="pawnRed-06.png" alt="vazir"></div>
+</div>
+
+<style type="text/css">
+/* menu styling*/
+
+input {
+    margin-left: 10px;
+}
+
+.piece{
+    margin-top: 20px;
+    margin-right: 10px;
+}
+
+#logo {
+    width: 150px;
+    height: 60px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#sideMenu {
+    width: 350px;
+    height: 920px;
+    border-right: 0px solid #000;
+    padding: 0 0 1em 0;
+    margin-bottom: 0em;
+    background-color: #303030;
+    float: left;
+}
+
+li {
+    font-family: 'Trebuchet MS', 'Lucida Grande', Verdana, Arial, sans-serif;
+    color: #CCCCCC;
+    margin-left: 20px;
+    margin-top: 10px;
+    position: relative;
+    align-items: center;
+    }
+
+ul{
+list-style: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+/* Board Styling */ 
+#red{
+    display: block;
+    width: 30px;
+    height: 30px;
+    z-index: 999;
+    position: absolute;
+    padding: 5px;
+}
+
+.teamRed{
+    width: 30px;
+    height: 30px;
+    z-index: 3;
+    cursor: move;
+    padding: 5px;
+}
+
+.teamBlue{
+    width: 30px;
+    height: 30px;
+    z-index: 3;
+    cursor: move;
+    padding: 5px;
+}
+
+#board {
+    font-size: 0;
+    border: 0px solid;
+    width: 680px;
+    height: 920px;
+    float: left;
+}
+
+.row {
+    display: block;
+    z-index: 1;
+}
+
+.tile {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    z-index: 2;
+    text-align: center;
+    padding-top: 0;
+}
+
+.white {
+    background-color: #919191;
+}
+
+.black {
+    background-color: #474747;
+}
+
+/* Body Style */
+body {
+    background-color: #333333;
+}
+
+</style>
+<script>
+
+//this is not working for some unknown reasons 
+
+/*
+function write(){
+    var inputRed=document.getElementById("input");
+    var redName = inputRed.value;
+    var name = document.createElement("div");
+    name.appendChild(redName);
+    //document.getElementById("#r").innerHTML += redName;
+}
+*/
+
+var rows = 23;
+var columns = 17;
+
+var tileNumber = 0;
+
+var board = document.getElementById("board");
+
+
+for(var y = 0; y < rows; y++) {
+    var row = document.createElement("div");
+    row.className = "row";
+
+    var useWhite = true;
+    for (var x = 0; x < columns; x++) {
+        var tile = document.createElement("div");
+
+        useWhite = true;
+
+        if(x % 2 == 0 && y % 2 != 0){
+        	useWhite = false;}
+
+        if(x % 2 != 0 && y % 2 == 0){
+        	useWhite = false;}
+
+        console.log('y', y, 'x', y, 'useWhite', useWhite);
+
+                    if(tileNumber<=6){
+                useWhite = true;}
+                if (tileNumber>9 && tileNumber<17){
+                    useWhite = true;
+                }
+                if (tileNumber>384){
+                    useWhite = true;
+                }
+                if (tileNumber<381 && tileNumber>374){
+                    useWhite = true;
+                }
+
+        if (useWhite){
+        	tile.className = "tile white ui-droppable";
+     	}
+        else
+        {
+         	tile.className = "tile black ui-droppable";
+     	}
+        // useWhite = !useWhite;
+
+        row.appendChild(tile);
+        tileNumber++;
+        tile.id=tileNumber.toString();
+        /*
+        if(tileNumber % 2 == 0){
+        tile.id="blackTile";
+    }
+        if(tileNumber%2 !=0){
+            tile.id="whiteTile";
+        }
+        */
+        console.log('tileNumber:', tileNumber, 'tile id:', tile.id, 'class:', tile.className);
+    }
+
+    board.appendChild(row);
+}
+
+
+var tile10= document.getElementById("10");
+var tile8= document.getElementById("8");
+var tile26= document.getElementById("26");
+var tile60= document.getElementById("60");
+var tile56= document.getElementById("56");
+var tile64= document.getElementById("64");
+var tile94= document.getElementById("94");
+
+var tile384= document.getElementById("384");
+var tile382= document.getElementById("382");
+var tile366= document.getElementById("366");
+var tile332= document.getElementById("332");
+var tile336= document.getElementById("336");
+var tile328= document.getElementById("328");
+var tile298= document.getElementById("298");
+
+console.log('tile', tile10);
+
+function add(){
+    var vazir = document.createElement("img");
+    vazir.setAttribute("src", "vazirBlue.png");
+    vazir.id="draggableVazir";
+    tile10.appendChild(vazir);
+
+    console.log(vazir);
+}
+
+//var blackTiles = document.getElementsByName('blackTile');
+//console.log("blackTiles", blackTiles);
+
+tile10.appendChild(hostageBlue1);
+tile8.appendChild(hostageBlue2);
+tile26.appendChild(strikerRed1);
+tile60.appendChild(strikerRed2);
+tile56.appendChild(strikerRed3);
+tile64.appendChild(strikerRed4);
+tile94.appendChild(gaurdianRed);
+
+tile384.appendChild(hostageRed1);
+tile382.appendChild(hostageRed2);
+tile366.appendChild(strikerBlue1);
+tile332.appendChild(strikerBlue2);
+tile336.appendChild(strikerBlue3);
+tile328.appendChild(strikerBlue4);
+tile298.appendChild(gaurdianBlue);
+
+//creating teams 
+var teamBlue = [hostageBlue1, hostageBlue2, strikerBlue1, strikerBlue2, strikerBlue3, strikerBlue4, gaurdianBlue];
+
+var teamRed = [hostageRed1, hostageRed2, strikerRed1,strikerRed2,strikerRed3,strikerRed4, gaurdianRed];
+
+gameinit = function (){
+//--------------------------to in ghemsmat kole teamhartoo dragable mikonim
+            $(teamRed).draggable({
+                    containment: 'tile',
+                    revert: true,
+                });
+            $(teamBlue).draggable({
+                    containment: 'tile',
+                    revert: true,
+                });
+//---------------------------------------------             
+ $(".tile.black.ui-droppable").droppable({
+        drop: function(event, ui){
+            var dropped = ui.draggable;
+            var droppedOn = $(this);
+
+                if( $(this).children().length > 0){
+                    console.log("it's full");
+                    event.revert = true;
+                    return false;
+                }
+                else
+                    {
+                        console.log($(teamRed));
+                        console.log("empty");}
+
+            $(droppedOn).droppable(false);
+            $(dropped).parent().droppable(false);
+            $(dropped).detach().css({top:0, left:0, margin:0, padding:0 }).appendTo(droppedOn);
+            $(dropped).css({margin:0, padding:0, border:0}).appendTo(droppedOn);
+
+            if($(dropped).is($(teamRed))){   
+                        $(teamRed).draggable( "disable" );  
+                        $(teamBlue).draggable( "enable" );
+                        return false;
+                }else{
+                        $(teamBlue).draggable( "disable" ); 
+                        $(teamRed).draggable( "enable" );
+                    return true;
+                    
+                }
+        }
+
+    });
+}
+window.onload = function () {
+    alert('Team Red Start');
+    gameinit();
+}
+
+</script>
+
+</body>
+</html>
